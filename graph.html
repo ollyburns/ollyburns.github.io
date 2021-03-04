@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+.line {
+  fill: none;
+}
+
+.y2Axis text{
+  fill: red;
+}
+
+.y2Axis {
+  font-family: Arial;
+  color: red;
+}
+
+.y2AxisLabel {
+  font-family: Arial;
+  fill:red;
+}
+
+.yAxis text{
+  fill: blue;
+}
+
+.yAxis {
+  font-family: Arial;
+  color: blue;
+}
+
+.yAxisLabel {
+  font-family: Arial;
+  fill:blue;
+}
+
+.xAxis {
+  font-family: Arial;
+  color: black;
+}
+
+.xAxisLabel {
+  font-family: Arial;
+  fill:black;
+}
+
+.title {
+  font-family: Arial;
+  color: black;
+}
+
+.settings {
+  font-family: Arial;
+  color: black;
+  padding: 10px;
+}
+</style>
+
+<script src="https://d3js.org/d3.v6.js"></script>
+
+
+
+<script>
+
+function startUp() {
+
+var d = new Date();
+d.setDate(d.getDate() - 2);
+document.getElementById('date').valueAsDate = d;
+
+document.getElementById('key').value = localStorage.getItem('key'); 
+document.getElementById('mpan').value = localStorage.getItem('mpan'); 
+document.getElementById('meter').value = localStorage.getItem('meter'); 
+
+if (document.getElementById('key').value != '' && document.getElementById('mpan').value != '' && document.getElementById('meter').value != '')
+	saveSettings();
+}
+
+function saveSettings() {
+localStorage.setItem('key' , document.getElementById('key').value);
+localStorage.setItem('mpan', document.getElementById('mpan').value);
+localStorage.setItem('meter', document.getElementById('meter').value);
+
+try {
+runScript();
+document.getElementById('settings').style.display = 'none';
+}
+catch (err) {
+console.log(err);
+document.getElementById('settings').style.display = 'block';
+}
+
+
+}
+
+function runScript() {
+
+
+console.log('d3.version = ' + d3.version);
+
+var start_date = new Date(document.getElementById('date').valueAsDate);
+console.log(start_date);
+var end_date = new Date(start_date);
+end_date.setDate(end_date.getDate() + 1);
+console.log(end_date);
+var date_range = '?period_from=' + start_date.toISOString() + '&period_to=' + end_date.toISOString();
+
+var price_url = 'https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-C/standard-unit-rates/' + date_range;
+
+var mpan = localStorage.getItem('mpan'); 
+var meter = localStorage.getItem('meter'); 
+var key = localStorage.getItem('key'); 
+var meter_url = "https://api.octopus.energy/v1/electricity-meter-points/" + mpan + "/meters/" + meter + "/consumption/" + date_range;
+
+var height = window.innerHeight;
+var width = window.innerWidth;
+var margin = ({top: 40, right: 40, bottom: 40, left: 40});
+
+console.log(price_url);
+
+d3.json(price_url).then(function(price_data) {
+
+d3.json(meter_url, {headers: [['Authorization', 'Basic ' + btoa(key)]]}).then(function(usage_data) {
+
+console.log(price_data);
+console.log(usage_data);
+
+var data = [];
+var formatMinute = d3.timeFormat("%H:%M");
+
+for (i=0;i<price_data.results.length;i++) {
+	var time = formatMinute( new Date(price_data.results[i].valid_from));
+	var lookup = usage_data.results.filter(function(item){return item.interval_start == price_data.results[i].valid_from});
+	
+	//console.log(lookup);
+	
+	var element;
+	if (lookup.length > 0)
+		element = {date:time, price:price_data.results[i].value_inc_vat, usage:lookup[0].consumption};
+	else
+		element = {date:time, price:price_data.results[i].value_inc_vat, usage:0};
+		
+	data.push(element);
+}
+
+console.log(data);
+
+var x = d3.scaleBand()
+  .domain(data.map(d => d.date).reverse())
+  .range([margin.left, width - margin.right])
+  .padding(0.1);
+
+var y = d3.scaleLinear()
+  .domain([0, d3.max(data, d => d.usage)])
+  .range([height - margin.bottom, margin.top]);
+
+var y2 = d3.scaleLinear()
+  .domain([0, d3.max(data, d => d.price)])
+  .range([height - margin.bottom, margin.top]);
+
+var xAxis = g => g
+  .attr("transform", `translate(0,${height - margin.bottom})`)
+  .call(d3.axisBottom(x).tickValues(['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '23:30']));
+
+
+var yAxis = g => g
+  .attr("transform", `translate(${margin.left},0)`)
+  .call(d3.axisLeft(y));
+
+var y2Axis = g => g
+  .attr("transform", `translate(${width - margin.right},0)`)
+  .call(d3.axisRight(y2));
+
+
+var svg = d3.select('svg');
+d3.selectAll("svg > *").remove();
+
+svg.attr("preserveAspectRatio", "xMinYMin meet")
+.attr("viewBox", "0 0 " + width + " " + height);
+
+var g = svg.append("g").attr("fill", "blue");
+
+g.selectAll("rect")
+  .data(data)
+  .join("rect")
+  .attr("x", d => x(d.date))
+  .attr("y", d => y(d.usage))
+  .attr("height", d => y(0) - y(d.usage))
+  .attr("width", x.bandwidth());
+
+var valueline2 = d3.line()
+    .x(function(d) { return x(d.date) + (x.bandwidth()/2); })
+    .y(function(d) { return y2(d.price); });
+	
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .style("stroke", "red")
+      .attr("d", valueline2);
+
+const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+svg.append("text")
+  .attr("class", "title")
+  .attr("x", 0)
+  .attr("y", -50)
+  .attr("text-anchor", "middle")
+  .attr("transform", "translate(" + width / 2 + ",80)")
+  .text("Usage vs. price on " + start_date.toLocaleDateString(undefined, options) + " for meter: " + meter);
+
+svg.append("g").attr("class", "xAxis").call(xAxis);
+
+svg.append("text")
+  .attr("class", "xAxisLabel")
+  .attr("x", 0)
+  .attr("y", height - 90)
+  .attr("text-anchor", "middle")
+  .attr("transform", "translate(" + width / 2 + ",80)")
+  .text("Time");
+
+svg.append("g").attr("class", "yAxis").call(yAxis);
+
+svg.append("text")
+	.attr("class", "yAxisLabel")
+    .attr("text-anchor", "middle")
+    .attr("transform", "rotate(-90)")
+    .attr("y", -margin.left+55)
+    .attr("x", -(height/2))
+    .text("Usage (KWh)")
+
+svg.append("g").attr("class", "y2Axis").call(y2Axis);
+
+svg.append("text")
+	.attr("class", "y2AxisLabel")
+    .attr("text-anchor", "middle")
+    .attr("transform", "rotate(90)")
+    .attr("y", -width+15)
+    .attr("x", (height/2))
+    .text("Price (pence/KWh)")
+
+
+
+    }).catch(function(err) {
+console.log(err);
+document.getElementById('settings').style.display = 'block';
+}) 
+}).catch(function(err) {
+console.log(err);
+document.getElementById('settings').style.display = 'block';
+});
+
+}
+</script>
+
+</head>
+
+<body onload="startUp();">
+<div align="center" class="settings" id="settings">
+Key: <input type="text" name="key" id="key" /> mpan: <input type="text" name="mpan" id="mpan" /> meter: <input type="text" name="meter" id="meter" /> <button type="button" onclick="saveSettings();">Save</button>
+</div>
+<div align="center" class="title">
+Date: <input type="date" name="date" id="date" onchange="runScript();"/>
+</div>
+
+
+<svg height="100%" width="100%"></svg>
+
+</body>
+
+
+</html>
