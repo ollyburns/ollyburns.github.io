@@ -169,9 +169,13 @@ var y2 = d3.scaleLinear()
   .domain([0, d3.max(data, d => d.price)])
   .range([height - margin.bottom, margin.top]);
 
+var lookup = data.filter(function(item){return item.date == '23:30'});
+var xAxisValues = ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'];
+if (lookup.length > 0) xAxisValues.push('11:30');
+
 var xAxis = g => g
   .attr("transform", `translate(0,${height - margin.bottom})`)
-  .call(d3.axisBottom(x).tickValues(['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '23:30']));
+  .call(d3.axisBottom(x).tickValues(xAxisValues));
 
 
 var yAxis = g => g
