@@ -4,6 +4,6 @@ All the processing is done client side, apart from two API requests made to Octo
 The API for the usage requires details for the particular meter - these values can be found here:
 https://octopus.energy/dashboard/developer/
 
-If you are an Octopus Agile customer and want to try it out go here: https://ollyburns.github.io/octopus/graph.html
+If you are an Octopus Agile customer and want to try it out go here: https://ollyburns.github.io/graph.html
 
-A screen shot example can be found here: https://ollyburns.github.io/octopus/ExampleOutput.png
+A screen shot example can be found here: https://ollyburns.github.io/ExampleOutput.png
