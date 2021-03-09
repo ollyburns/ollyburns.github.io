@@ -107,16 +107,25 @@ end_date.setDate(end_date.getDate() + 1);
 console.log(end_date);
 var date_range = '?period_from=' + start_date.toISOString() + '&period_to=' + end_date.toISOString();
 
-var price_url = 'https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-C/standard-unit-rates/' + date_range;
 
 var mpan = localStorage.getItem('mpan'); 
 var meter = localStorage.getItem('meter'); 
 var key = localStorage.getItem('key'); 
 var meter_url = "https://api.octopus.energy/v1/electricity-meter-points/" + mpan + "/meters/" + meter + "/consumption/" + date_range;
 
+var meter_info_url = 'https://api.octopus.energy/v1/electricity-meter-points/' + mpan + '/';
+
 var height = window.innerHeight;
 var width = window.innerWidth;
 var margin = ({top: 40, right: 40, bottom: 40, left: 40});
+
+
+
+d3.json(meter_info_url).then(function(meter_info) {
+console.log(meter_info);
+
+var region = meter_info.gsp.charAt(1); 
+var price_url = 'https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-' + region + '/standard-unit-rates/' + date_range;
 
 console.log(price_url);
 
@@ -243,6 +252,10 @@ svg.append("text")
 
 
     }).catch(function(err) {
+console.log(err);
+document.getElementById('settings').style.display = 'block';
+}) 
+}).catch(function(err) {
 console.log(err);
 document.getElementById('settings').style.display = 'block';
 }) 
