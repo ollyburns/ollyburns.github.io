@@ -16,7 +16,8 @@ var urlsToPrefetch = [
 '/site.webmanifest'
 ];
 var urlsToCacheInline = [
-'https://api.octopus.energy/v1/electricity-meter-points'
+'https://api.octopus.energy/v1/electricity-meter-points',
+'https://api.octopus.energy/v1/products'
 ];
   
 self.addEventListener('install', function(event) {
