@@ -16,7 +16,7 @@ var urlsToPrefetch = [
 '/site.webmanifest'
 ];
 var urlsToCacheInline = [
-'https://api.octopus.e1nergy/v1/electricity-meter-points'
+'https://api.octopus.energy/v1/electricity-meter-points'
 ];
   
 self.addEventListener('install', function(event) {
@@ -121,11 +121,9 @@ self.addEventListener('fetch', function(event) {
         console.log('Response from network is:', response);
 		
 		//Add response to cache if in cache whitelist
-		urlsToCacheInline.map(function(expectedCacheName){
-				console.log(expectedCacheName);
+		urlsToCacheInline.forEach(function(expectedCacheName){
 		  if (event.request.url.indexOf(expectedCacheName) > -1)
 			  caches.open(CURRENT_CACHES.inline).then(function(cache) {
-				console.log(event.request.url);
 				cache.put(event.request.url, response);
 			  });
 		  });
