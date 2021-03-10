@@ -122,8 +122,10 @@ self.addEventListener('fetch', function(event) {
 		
 		//Add response to cache if in cache whitelist
 		urlsToCacheInline.map(function(expectedCacheName){
+				console.log(expectedCacheName);
 		  if (event.request.url.indexOf(expectedCacheName) > -1)
 			  caches.open(CURRENT_CACHES.inline).then(function(cache) {
+				console.log(event.request.url);
 				cache.put(event.request.url, response);
 			  });
 		  });
