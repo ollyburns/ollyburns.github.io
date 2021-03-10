@@ -118,13 +118,14 @@ self.addEventListener('fetch', function(event) {
       // event.request will always have the proper mode set ('cors, 'no-cors', etc.) so we don't
       // have to hardcode 'no-cors' like we do when fetch()ing in the install handler.
       return fetch(event.request).then(function(response) {
+		var responseCopy = response.clone();
         console.log('Response from network is:', response);
 		
 		//Add response to cache if in cache whitelist
 		urlsToCacheInline.forEach(function(expectedCacheName){
 		  if (event.request.url.indexOf(expectedCacheName) > -1)
 			  caches.open(CURRENT_CACHES.inline).then(function(cache) {
-				cache.put(event.request.url, response.clone());
+				cache.put(event.request, responseCopy);
 			  });
 		  });
 		
