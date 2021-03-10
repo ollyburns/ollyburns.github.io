@@ -3,9 +3,10 @@
 // cache, then increment the CACHE_VERSION value. It will kick off the service worker update
 // flow and the old cache(s) will be purged as part of the activate event handler when the
 // updated service worker is activated.
-var CACHE_VERSION = 2;
+var CACHE_VERSION = 3;
 var CURRENT_CACHES = {
-  prefetch: 'prefetch-cache-v' + CACHE_VERSION
+  prefetch: 'prefetch-cache-v' + CACHE_VERSION,
+  inline: 'inline-cache-v' + CACHE_VERSION
 };
 
 self.addEventListener('install', function(event) {
@@ -16,12 +17,17 @@ self.addEventListener('install', function(event) {
 	'/favicon.ico',
 	'/favicon-32x32.png',
 	'/favicon-16x16.png',
-	'https://api.octopus.energy/v1/electricity-meter-points'
+	'/site.webmanifest'
   ];
+  
+  var urlsToCacheInline = [
+    'https://api.octopus.e1nergy/v1/electricity-meter-points'
+  ]
 
   // All of these logging statements should be visible via the "Inspect" interface
   // for the relevant SW accessed via chrome://serviceworker-internals
   console.log('Handling install event. Resources to prefetch:', urlsToPrefetch);
+  console.log('Handling install event. Resources to cache inline:', urlsToCacheInline);
 
   event.waitUntil(
     caches.open(CURRENT_CACHES.prefetch).then(function(cache) {
@@ -72,8 +78,6 @@ self.addEventListener('install', function(event) {
 
 self.addEventListener('activate', function(event) {
   // Delete all caches that aren't named in CURRENT_CACHES.
-  // While there is only one cache in this example, the same logic will handle the case where
-  // there are multiple versioned caches.
   var expectedCacheNames = Object.keys(CURRENT_CACHES).map(function(key) {
     return CURRENT_CACHES[key];
   });
@@ -82,7 +86,12 @@ self.addEventListener('activate', function(event) {
     caches.keys().then(function(cacheNames) {
       return Promise.all(
         cacheNames.map(function(cacheName) {
-          if (cacheName.indexOf(expectedCacheNames) === -1) {
+		  var found = false;
+	      expectedCacheNames.map(function(expectedCacheName){
+			  if (cacheName.indexOf(expectedCacheName) > -1)
+				found = true;
+		  })
+          if (!found) {
             // If this cache name isn't present in the array of "expected" cache names, then delete it.
             console.log('Deleting out of date cache:', cacheName);
             return caches.delete(cacheName);
@@ -112,7 +121,15 @@ self.addEventListener('fetch', function(event) {
       // have to hardcode 'no-cors' like we do when fetch()ing in the install handler.
       return fetch(event.request).then(function(response) {
         console.log('Response from network is:', response);
-
+		
+		//Add response to cache if in cache whitelist
+		urlsToCacheInline.map(function(expectedCacheName){
+		  if (event.request.indexOf(expectedCacheName) > -1)
+			  caches.open(CURRENT_CACHES.inline).then(function(cache) {
+				cache.put(event.request, response);
+			  });
+		  });
+		
         return response;
       }).catch(function(error) {
         // This catch() will handle exceptions thrown from the fetch() operation.
