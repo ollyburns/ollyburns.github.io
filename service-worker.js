@@ -124,7 +124,7 @@ self.addEventListener('fetch', function(event) {
 		urlsToCacheInline.forEach(function(expectedCacheName){
 		  if (event.request.url.indexOf(expectedCacheName) > -1)
 			  caches.open(CURRENT_CACHES.inline).then(function(cache) {
-				cache.put(event.request.url, response);
+				cache.put(event.request.url, response.clone());
 			  });
 		  });
 		
