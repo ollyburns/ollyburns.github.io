@@ -86,9 +86,9 @@ self.addEventListener('activate', function(event) {
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
       return Promise.all(
-        cacheNames.map(function(cacheName) {
+        cacheNames.forEach(function(cacheName) {
 		  var found = false;
-	      expectedCacheNames.map(function(expectedCacheName) {
+	      expectedCacheNames.forEach(function(expectedCacheName) {
 			  if (cacheName.indexOf(expectedCacheName) > -1)
 				found = true;
 		  });
@@ -116,7 +116,7 @@ self.addEventListener('fetch', function(event) {
 		
 		var oldCacheTimeStamp = tempCacheKeys[event.request.url];
 		var today = new Date();
-		if (oldCacheTimeStamp && ((today.getDate() <> oldCacheTimeStamp.getDate()) || (today.getMonth() <> oldCacheTimeStamp.getMonth())) {	
+		if (oldCacheTimeStamp && ((today.getDate() !== oldCacheTimeStamp.getDate()) || (today.getMonth() !== oldCacheTimeStamp.getMonth()))) {	
 			console.log('Stale cache. About to fetch from network...');
 			delete tempCacheKeys[event.request.url];
 		}
