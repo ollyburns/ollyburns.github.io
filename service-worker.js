@@ -19,7 +19,9 @@ var urlsToCacheInline = [
 'https://api.octopus.energy/v1/electricity-meter-points',
 'https://api.octopus.energy/v1/products'
 ];
-  
+
+self.importScripts('https://unpkg.com/idb/build/iife/index-min.js');
+
 self.addEventListener('install', function(event) {
   var now = Date.now();
 
@@ -91,9 +93,7 @@ self.addEventListener('activate', function(event) {
   
 });
 
-function addToCacheKeys(cacheKey, date) {
-  if (!idb)
-	self.importScripts('https://unpkg.com/idb/build/iife/index-min.js');
+function addToCacheKeys(cacheKey, date) {	
   idb.open('UsageVsPrice', 1, function(upgradeDB) {
     var store = upgradeDB.createObjectStore('tempCacheKeys', {
       keyPath: 'cacheKey'
@@ -103,8 +103,6 @@ function addToCacheKeys(cacheKey, date) {
 }
 
 function getFromCacheKeys(cacheKey) {
-  if (!idb)
-	self.importScripts('https://unpkg.com/idb/build/iife/index-min.js');
   idb.open('UsageVsPrice', 1, function(upgradeDB) {
     var store = upgradeDB.createObjectStore('tempCacheKeys', {
       keyPath: 'cacheKey'
@@ -116,8 +114,6 @@ function getFromCacheKeys(cacheKey) {
 }
 
 function deleteFromCacheKeys(cacheKey) {
-  if (!idb)
-	self.importScripts('https://unpkg.com/idb/build/iife/index-min.js');
   idb.open('UsageVsPrice', 1, function(upgradeDB) {
     var store = upgradeDB.createObjectStore('tempCacheKeys', {
       keyPath: 'cacheKey'
