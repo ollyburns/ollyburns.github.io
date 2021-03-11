@@ -96,7 +96,7 @@ self.addEventListener('activate', function(event) {
 });
 
 function getDBPromise() {
-  return idb.openDB('UsageVsPrice', 1, function(upgradeDB) {upgradeDB.createObjectStore(cacheKeyStoreName);} );
+  return idb.openDB('UsageVsPrice', 1, function(upgradeDB) {console.log(upgradeDB); upgradeDB.createObjectStore(cacheKeyStoreName);} );
 }
 
 function addToCacheKeys(cacheKey, date) {	
@@ -125,7 +125,7 @@ self.addEventListener('fetch', function(event) {
         console.log('Found response in cache:', response);
 		
 		getFromCacheKeys(event.request.url).then(function(oldCacheTimeStamp) {
-		  console.log(oldCacheTimeStamp);
+		  //console.log(oldCacheTimeStamp);
 		  var today = new Date();
 		  if (oldCacheTimeStamp && ((today.getDate() !== oldCacheTimeStamp.getDate()) || (today.getMonth() !== oldCacheTimeStamp.getMonth()))) {	
 			console.log('Stale cache. About to fetch from network...');
