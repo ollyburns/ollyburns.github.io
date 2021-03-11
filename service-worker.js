@@ -63,7 +63,7 @@ self.addEventListener('install', function(event) {
         console.log('Pre-fetching complete.');
       });
 	  
-	  event.waitUntil(idb.openDB('UsageVsPrice', 1, {function(upgradeDB) {console.log(upgradeDB); upgradeDB.createObjectStore(cacheKeyStoreName);}}));
+	  event.waitUntil(idb.openDB('UsageVsPrice', 1, {upgrade(db) {console.log(db); db.createObjectStore(cacheKeyStoreName);}}));
     }).catch(function(error) {
       console.error('Pre-fetching failed:', error);
     })
