@@ -1,4 +1,3 @@
-
 // If at any point you want to force pages that use this service worker to start using a fresh
 // cache, then increment the CACHE_VERSION value. It will kick off the service worker update
 // flow and the old cache(s) will be purged as part of the activate event handler when the
@@ -10,6 +9,7 @@ var CURRENT_CACHES = {
 };
 var urlsToPrefetch = [
 'https://d3js.org/d3.v6.js',
+'https://unpkg.com/idb/build/iife/index-min.js',
 '/favicon.ico',
 '/favicon-32x32.png',
 '/favicon-16x16.png',
@@ -19,13 +19,10 @@ var urlsToCacheInline = [
 'https://api.octopus.energy/v1/electricity-meter-points',
 'https://api.octopus.energy/v1/products'
 ];
-var tempCacheKeys = {};
   
 self.addEventListener('install', function(event) {
   var now = Date.now();
 
-  // All of these logging statements should be visible via the "Inspect" interface
-  // for the relevant SW accessed via chrome://serviceworker-internals
   console.log('Handling install event. Resources to prefetch:', urlsToPrefetch);
   console.log('Handling install event. Resources to cache inline:', urlsToCacheInline);
 
@@ -43,16 +40,6 @@ self.addEventListener('install', function(event) {
         // the service worker script changes triggering the install flow.
         url.search += (url.search ? '&' : '?') + 'cache-bust=' + now;
 
-        // It's very important to use {mode: 'no-cors'} if there is any chance that
-        // the resources being fetched are served off of a server that doesn't support
-        // CORS (http://en.wikipedia.org/wiki/Cross-origin_resource_sharing).
-        // In this example, www.chromium.org doesn't support CORS, and the fetch()
-        // would fail if the default mode of 'cors' was used for the fetch() request.
-        // The drawback of hardcoding {mode: 'no-cors'} is that the response from all
-        // cross-origin hosts will always be opaque
-        // (https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#cross-origin-resources)
-        // and it is not possible to determine whether an opaque response represents a success or failure
-        // (https://github.com/whatwg/fetch/issues/14).
         //var request = new Request(url, {mode: 'no-cors'});
         var request = new Request(url);
         return fetch(request).then(function(response) {
@@ -104,9 +91,41 @@ self.addEventListener('activate', function(event) {
   
 });
 
+function addToCacheKeys(cacheKey, date) {
+  if (!idb)
+	self.importScripts('https://unpkg.com/idb/build/iife/index-min.js');
+  idb.open('UsageVsPrice', 1, function(upgradeDB) {
+    var store = upgradeDB.createObjectStore('tempCacheKeys', {
+      keyPath: 'cacheKey'
+    });
+    store.put({cacheKey: cacheKey, date: date});
+  });	
+}
+
+function getFromCacheKeys(cacheKey) {
+  if (!idb)
+	self.importScripts('https://unpkg.com/idb/build/iife/index-min.js');
+  idb.open('UsageVsPrice', 1, function(upgradeDB) {
+    var store = upgradeDB.createObjectStore('tempCacheKeys', {
+      keyPath: 'cacheKey'
+    });
+    return (await store.get(cacheKey)).date;
+  });
+}
+
+function deleteFromCacheKeys(cacheKey) {
+  if (!idb)
+	self.importScripts('https://unpkg.com/idb/build/iife/index-min.js');
+  idb.open('UsageVsPrice', 1, function(upgradeDB) {
+    var store = upgradeDB.createObjectStore('tempCacheKeys', {
+      keyPath: 'cacheKey'
+    });
+    await store.delete(cacheKey);
+  });
+}
+
 self.addEventListener('fetch', function(event) {
   console.log('Handling fetch event for', event.request.url);
-  console.log(tempCacheKeys);
 
   event.respondWith(
     // caches.match() will look for a cache entry in all of the caches available to the service worker.
@@ -115,11 +134,11 @@ self.addEventListener('fetch', function(event) {
       if (response) {
         console.log('Found response in cache:', response);
 		
-		var oldCacheTimeStamp = tempCacheKeys[event.request.url];
+		var oldCacheTimeStamp = getFromCacheKeys(event.request.url);
 		var today = new Date();
 		if (oldCacheTimeStamp && ((today.getDate() !== oldCacheTimeStamp.getDate()) || (today.getMonth() !== oldCacheTimeStamp.getMonth()))) {	
 			console.log('Stale cache. About to fetch from network...');
-			delete tempCacheKeys[event.request.url];
+			deleteFromCacheKeys(event.request.url);
 		}
 		else
 		  return response;
@@ -140,9 +159,9 @@ self.addEventListener('fetch', function(event) {
 				cache.put(event.request, responseCopy);
 				var now = new Date();
 				var todayDateString = now.getFullYear() + '-' + ('0' + now.getMonth()).slice(-2) + '-' + ('0' + now.getDate()).slice(-2) + 'T'; //2021-03-11T
-				console.log(todayDateString);
+				//console.log(todayDateString);
 				if (event.request.url.indexOf(todayDateString) > -1)
-					tempCacheKeys[event.request.url] = new Date();
+			      addToCacheKeys(event.request.url, new Date());
 			  });
 		  });
 		
