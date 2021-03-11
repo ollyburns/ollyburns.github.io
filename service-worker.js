@@ -106,6 +106,7 @@ self.addEventListener('activate', function(event) {
 
 self.addEventListener('fetch', function(event) {
   console.log('Handling fetch event for', event.request.url);
+  console.log(tempCacheKeys);
 
   event.respondWith(
     // caches.match() will look for a cache entry in all of the caches available to the service worker.
