@@ -139,7 +139,7 @@ self.addEventListener('fetch', function(event) {
 			  caches.open(CURRENT_CACHES.inline).then(function(cache) {
 				cache.put(event.request, responseCopy);
 				var now = new Date();
-				var todayDateString = now.getFullYear() + '-' + ('0' + now.getMonth()).slice(-2) + ('0' + now.getDate()).slice(-2) + 'T'; //2021-03-11T
+				var todayDateString = now.getFullYear() + '-' + ('0' + now.getMonth()).slice(-2) + '-' + ('0' + now.getDate()).slice(-2) + 'T'; //2021-03-11T
 				console.log(todayDateString);
 				if (event.request.url.indexOf(todayDateString) > -1)
 					tempCacheKeys[event.request.url] = new Date();
