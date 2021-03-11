@@ -20,7 +20,7 @@ var urlsToCacheInline = [
 'https://api.octopus.energy/v1/products'
 ];
 var databaseName = 'UsageVsPrice';
-var cacheKeyStoreName = 'tempCacheKeys';
+var cacheKeyStoreName = 'tempcachekeys';
 
 self.importScripts('/index-min.js');
 
@@ -63,8 +63,8 @@ self.addEventListener('install', function(event) {
         console.log('Pre-fetching complete.');
       });
 	  
-	  //event.waitUntil(idb.openDB('UsageVsPrice', 1, {upgrade(db) {console.log(db); db.createObjectStore(cacheKeyStoreName);}}));
-	  event.waitUntil(idb.openDB('UsageVsPrice').then(function(db) {db.transaction(cacheKeyStoreName).objectStore(cacheKeyStoreName)}));
+	  event.waitUntil(idb.openDB('UsageVsPrice', 1, {upgrade(db) {console.log(db); db.createObjectStore(cacheKeyStoreName);}}));
+	  //event.waitUntil(idb.openDB('UsageVsPrice').then(function(db) {db.transaction(cacheKeyStoreName).objectStore(cacheKeyStoreName)}));
 	  
     }).catch(function(error) {
       console.error('Pre-fetching failed:', error);
