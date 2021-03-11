@@ -109,7 +109,9 @@ function getFromCacheKeys(cacheKey) {
     var store = upgradeDB.createObjectStore('tempCacheKeys', {
       keyPath: 'cacheKey'
     });
-    return (await store.get(cacheKey)).date;
+	var data = await store.get(cacheKey);
+	console.log(data);
+    return data.date;
   });
 }
 
