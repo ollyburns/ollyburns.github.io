@@ -158,8 +158,10 @@ self.addEventListener('fetch', function(event) {
 				var todayDateString = now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2) + '-' + ('0' + now.getDate()).slice(-2) + 'T'; //2021-03-11T
 				//console.log(todayDateString);
 				//console.log(event.request.url);
-				if (event.request.url.indexOf(todayDateString) > -1)
-			      addToCacheKeys(event.request.url, new Date());
+				if (event.request.url.indexOf(todayDateString) > -1) {
+				  now.setDate(now.getDate() - 1);
+			      addToCacheKeys(event.request.url, now);
+				}
 			  });
 		  });
 		
