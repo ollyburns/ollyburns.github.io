@@ -124,7 +124,7 @@ self.addEventListener('fetch', function(event) {
       if (response) {
         console.log('Found response in cache:', response);
 		
-		var oldCacheTimeStamp = getFromCacheKeys(event.request.url);
+		var oldCacheTimeStamp = await getFromCacheKeys(event.request.url);
 		console.log(oldCacheTimeStamp);
 		var today = new Date();
 		if (oldCacheTimeStamp && ((today.getDate() !== oldCacheTimeStamp.getDate()) || (today.getMonth() !== oldCacheTimeStamp.getMonth()))) {	
