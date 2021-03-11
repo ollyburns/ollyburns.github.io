@@ -124,15 +124,16 @@ self.addEventListener('fetch', function(event) {
       if (response) {
         console.log('Found response in cache:', response);
 		
-		var oldCacheTimeStamp = await getFromCacheKeys(event.request.url);
-		console.log(oldCacheTimeStamp);
-		var today = new Date();
-		if (oldCacheTimeStamp && ((today.getDate() !== oldCacheTimeStamp.getDate()) || (today.getMonth() !== oldCacheTimeStamp.getMonth()))) {	
+		getFromCacheKeys(event.request.url).then(function(oldCacheTimeStamp) {
+		  console.log(oldCacheTimeStamp);
+		  var today = new Date();
+		  if (oldCacheTimeStamp && ((today.getDate() !== oldCacheTimeStamp.getDate()) || (today.getMonth() !== oldCacheTimeStamp.getMonth()))) {	
 			console.log('Stale cache. About to fetch from network...');
 			deleteFromCacheKeys(event.request.url);
-		}
-		else
-		  return response;
+		  }
+		  else
+		    return response;
+		})
       }
 	  else
 		console.log('No response found in cache. About to fetch from network...');
