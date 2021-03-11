@@ -133,10 +133,12 @@ self.addEventListener('fetch', function(event) {
 		  if (oldCacheTimeStamp && ((today.getDate() !== oldCacheTimeStamp.getDate()) || (today.getMonth() !== oldCacheTimeStamp.getMonth()))) {	
 			console.log('Stale cache. About to fetch from network...');
 			deleteFromCacheKeys(event.request.url);
+			response = undefined;
 		  }
-		  else
-		    return response;
-		})
+		});
+		
+		if (response)
+		  return response;
       }
 	  else
 		console.log('No response found in cache. About to fetch from network...');
