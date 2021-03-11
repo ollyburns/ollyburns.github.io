@@ -19,8 +19,10 @@ var urlsToCacheInline = [
 'https://api.octopus.energy/v1/electricity-meter-points',
 'https://api.octopus.energy/v1/products'
 ];
+var databaseName = 'UsageVsPrice';
+var cacheKeyStoreName = 'tempCacheKeys';
 
-importScripts('/index-min.js');
+self.importScripts('/index-min.js');
 
 self.addEventListener('install', function(event) {
   var now = Date.now();
@@ -93,33 +95,33 @@ self.addEventListener('activate', function(event) {
   
 });
 
-function addToCacheKeys(cacheKey, date) {	
-  idb.open('UsageVsPrice', 1, function(upgradeDB) {
-    var store = upgradeDB.createObjectStore('tempCacheKeys', {
+/*
+function createCacheKeyStore(upgradeDB) {
+    upgradeDB.createObjectStore(cacheKeyStoreName, {
       keyPath: 'cacheKey'
     });
-    store.put({cacheKey: cacheKey, date: date});
-  });	
+}
+*/
+
+function getDB()
+{
+	return idb.openDB('UsageVsPrice', 1, createCacheKeyStore);
+	//return idb.openDB('UsageVsPrice', 1, createCacheKeyStore);
+}
+
+function addToCacheKeys(cacheKey, date) {	
+  var db = getDB();
+  db.put(cacheKeyStoreName, date, cacheKey);
 }
 
 function getFromCacheKeys(cacheKey) {
-  idb.open('UsageVsPrice', 1, function(upgradeDB) {
-    var store = upgradeDB.createObjectStore('tempCacheKeys', {
-      keyPath: 'cacheKey'
-    });
-	var data = store.get(cacheKey);
-	console.log(data);
-    return data.date;
-  });
+  var db = getDB();
+  return db.get(cacheKeyStoreName, cacheKey);
 }
 
 function deleteFromCacheKeys(cacheKey) {
-  idb.open('UsageVsPrice', 1, function(upgradeDB) {
-    var store = upgradeDB.createObjectStore('tempCacheKeys', {
-      keyPath: 'cacheKey'
-    });
-    store.delete(cacheKey);
-  });
+  var db = getDB();
+  return db.delete(cacheKeyStoreName, cacheKey);
 }
 
 self.addEventListener('fetch', function(event) {
