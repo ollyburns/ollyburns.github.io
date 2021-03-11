@@ -105,7 +105,7 @@ function createCacheKeyStore(upgradeDB) {
 
 function getDB()
 {
-	return idb.openDB('UsageVsPrice', 1, createCacheKeyStore);
+	return idb.openDB('UsageVsPrice');
 	//return idb.openDB('UsageVsPrice', 1, createCacheKeyStore);
 }
 
