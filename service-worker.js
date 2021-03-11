@@ -19,6 +19,7 @@ var urlsToCacheInline = [
 'https://api.octopus.energy/v1/electricity-meter-points',
 'https://api.octopus.energy/v1/products'
 ];
+var tempCacheKeys = {};
   
 self.addEventListener('install', function(event) {
   var now = Date.now();
@@ -52,7 +53,8 @@ self.addEventListener('install', function(event) {
         // (https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#cross-origin-resources)
         // and it is not possible to determine whether an opaque response represents a success or failure
         // (https://github.com/whatwg/fetch/issues/14).
-        var request = new Request(url, {mode: 'no-cors'});
+        //var request = new Request(url, {mode: 'no-cors'});
+        var request = new Request(url);
         return fetch(request).then(function(response) {
           if (response.status >= 400) {
             throw new Error('request for ' + urlToPrefetch +
@@ -95,10 +97,11 @@ self.addEventListener('activate', function(event) {
             console.log('Deleting out of date cache:', cacheName);
             return caches.delete(cacheName);
           }
-        })
+        });
       );
     })
   );
+  
 });
 
 self.addEventListener('fetch', function(event) {
@@ -110,11 +113,18 @@ self.addEventListener('fetch', function(event) {
     caches.match(event.request).then(function(response) {
       if (response) {
         console.log('Found response in cache:', response);
-
-        return response;
+		
+		var oldCacheTimeStamp = tempCacheKeys[event.request.url];
+		var today = new Date();
+		if (oldCacheTimeStamp && ((today.getDate() <> oldCacheTimeStamp.getDate()) || (today.getMonth() <> oldCacheTimeStamp.getMonth())) {	
+			console.log('Stale cache. About to fetch from network...');
+			delete tempCacheKeys[event.request.url];
+		}
+		else
+		  return response;
       }
-
-      console.log('No response found in cache. About to fetch from network...');
+	  else
+		console.log('No response found in cache. About to fetch from network...');
 
       // event.request will always have the proper mode set ('cors, 'no-cors', etc.) so we don't
       // have to hardcode 'no-cors' like we do when fetch()ing in the install handler.
@@ -127,6 +137,10 @@ self.addEventListener('fetch', function(event) {
 		  if (event.request.url.indexOf(expectedCacheName) > -1)
 			  caches.open(CURRENT_CACHES.inline).then(function(cache) {
 				cache.put(event.request, responseCopy);
+				var now = new Date();
+				var todayDateString = now.getFullYear() + '-' + ('0' + now.getMonth()).slice(-2) + ('0' + now.getDate()).slice(-2) + 'T'; //2021-03-11T
+				if (event.request.url.indexOf(todayDateString) > -1)
+					tempCacheKeys[event.request.url] = new Date();
 			  });
 		  });
 		

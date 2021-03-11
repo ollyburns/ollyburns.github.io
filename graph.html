@@ -147,7 +147,7 @@ console.log(meter_info);
 var region = meter_info.gsp.charAt(1); 
 var price_url = 'https://api.octopus.energy/v1/products/AGILE-18-02-21/electricity-tariffs/E-1R-AGILE-18-02-21-' + region + '/standard-unit-rates/' + date_range;
 
-console.log(price_url);
+//console.log(price_url);
 
 d3.json(price_url).then(function(price_data) {
 
