@@ -20,7 +20,7 @@ var urlsToCacheInline = [
 'https://api.octopus.energy/v1/products'
 ];
 
-self.importScripts('/index-min.js');
+importScripts('/index-min.js');
 
 self.addEventListener('install', function(event) {
   var now = Date.now();
