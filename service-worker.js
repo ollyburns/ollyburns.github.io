@@ -30,6 +30,9 @@ self.addEventListener('install', function(event) {
   console.log('Handling install event. Resources to prefetch:', urlsToPrefetch);
   console.log('Handling install event. Resources to cache inline:', urlsToCacheInline);
 
+  event.waitUntil(idb.openDB('UsageVsPrice', 1, {upgrade(db) {console.log(db); db.createObjectStore(cacheKeyStoreName);}}));
+  //event.waitUntil(idb.openDB('UsageVsPrice').then(function(db) {db.transaction(cacheKeyStoreName).objectStore(cacheKeyStoreName)}));
+
   event.waitUntil(
     caches.open(CURRENT_CACHES.prefetch).then(function(cache) {
       var cachePromises = urlsToPrefetch.map(function(urlToPrefetch) {
@@ -58,9 +61,6 @@ self.addEventListener('install', function(event) {
           console.error('Not caching ' + urlToPrefetch + ' due to ' + error);
         });
       });
-	  
-	  event.waitUntil(idb.openDB('UsageVsPrice', 1, {upgrade(db) {console.log(db); db.createObjectStore(cacheKeyStoreName);}}));
-	  //event.waitUntil(idb.openDB('UsageVsPrice').then(function(db) {db.transaction(cacheKeyStoreName).objectStore(cacheKeyStoreName)}));
 
       return Promise.all(cachePromises).then(function() {
         console.log('Pre-fetching complete.');
