@@ -62,6 +62,8 @@ self.addEventListener('install', function(event) {
       return Promise.all(cachePromises).then(function() {
         console.log('Pre-fetching complete.');
       });
+	  
+	  event.waitUntil(idb.openDB('UsageVsPrice', 1, function(upgradeDB) {console.log(upgradeDB); upgradeDB.createObjectStore(cacheKeyStoreName);} ));
     }).catch(function(error) {
       console.error('Pre-fetching failed:', error);
     })
@@ -96,7 +98,8 @@ self.addEventListener('activate', function(event) {
 });
 
 function getDBPromise() {
-  return idb.openDB('UsageVsPrice', 1, function(upgradeDB) {console.log(upgradeDB); upgradeDB.createObjectStore(cacheKeyStoreName);} );
+  //return idb.openDB('UsageVsPrice', 1, function(upgradeDB) {console.log(upgradeDB); upgradeDB.createObjectStore(cacheKeyStoreName);} );
+  return idb.openDB('UsageVsPrice');
 }
 
 function addToCacheKeys(cacheKey, date) {	
