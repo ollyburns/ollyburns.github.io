@@ -9,7 +9,7 @@ var CURRENT_CACHES = {
 };
 var urlsToPrefetch = [
 'https://d3js.org/d3.v6.js',
-'https://unpkg.com/idb/build/iife/index-min.js',
+'/index-min.js',
 '/favicon.ico',
 '/favicon-32x32.png',
 '/favicon-16x16.png',
@@ -20,7 +20,7 @@ var urlsToCacheInline = [
 'https://api.octopus.energy/v1/products'
 ];
 
-self.importScripts('https://unpkg.com/idb/build/iife/index-min.js');
+self.importScripts('/index-min.js');
 
 self.addEventListener('install', function(event) {
   var now = Date.now();
