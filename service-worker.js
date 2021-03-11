@@ -95,33 +95,23 @@ self.addEventListener('activate', function(event) {
   
 });
 
-/*
-function createCacheKeyStore(upgradeDB) {
-    upgradeDB.createObjectStore(cacheKeyStoreName, {
-      keyPath: 'cacheKey'
-    });
-}
-*/
-
-function getDB()
-{
-	return idb.openDB('UsageVsPrice');
-	//return idb.openDB('UsageVsPrice', 1, createCacheKeyStore);
+function getDBPromise() {
+  return idb.openDB('UsageVsPrice', 1, function(upgradeDB) {upgradeDB.createObjectStore(cacheKeyStoreName);} );
 }
 
 function addToCacheKeys(cacheKey, date) {	
-  var db = getDB();
-  db.put(cacheKeyStoreName, date, cacheKey);
+  var dbPromise = getDBPromise();
+  dbPromise.then(function(db) { db.put(cacheKeyStoreName, date, cacheKey) });
 }
 
 function getFromCacheKeys(cacheKey) {
-  var db = getDB();
-  return db.get(cacheKeyStoreName, cacheKey);
+  var dbPromise = getDBPromise();
+  return dbPromise.then(function(db) { db.get(cacheKeyStoreName, cacheKey) });
 }
 
 function deleteFromCacheKeys(cacheKey) {
-  var db = getDB();
-  return db.delete(cacheKeyStoreName, cacheKey);
+  var dbPromise = getDBPromise();
+  dbPromise.then(function(db) { db.delete(cacheKeyStoreName, cacheKey) });
 }
 
 self.addEventListener('fetch', function(event) {
