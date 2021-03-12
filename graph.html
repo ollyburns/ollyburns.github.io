@@ -135,7 +135,7 @@ var meter_url = "https://api.octopus.energy/v1/electricity-meter-points/" + mpan
 
 var meter_info_url = 'https://api.octopus.energy/v1/electricity-meter-points/' + mpan + '/';
 
-var height = window.innerHeight;
+var height = window.innerHeight - document.getElementById('date_div').offsetHeight;
 var width = window.innerWidth;
 var margin = ({top: 40, right: 40, bottom: 40, left: 40});
 
@@ -301,7 +301,7 @@ document.getElementById('settings').style.display = 'block';
 </div>
 Key: <input type="text" name="key" id="key" /> mpan: <input type="text" name="mpan" id="mpan" /> meter: <input type="text" name="meter" id="meter" /> <button type="button" onclick="saveSettings();">Save</button>
 </div>
-<div align="center" class="title">
+<div align="center" class="title" id="date_div">
 Date: <input type="date" name="date" id="date" onchange="runScript();"/>
 </div>
 
