@@ -13,8 +13,8 @@ var urlsToPrefetch = [
 '/favicon.ico',
 '/favicon-32x32.png',
 '/favicon-16x16.png',
-'/site.webmanifest'//,
-//'/graph.html'
+'/site.webmanifest',
+'/graph.html'
 ];
 var urlsToCacheInline = [
 'https://api.octopus.energy/v1/electricity-meter-points',
