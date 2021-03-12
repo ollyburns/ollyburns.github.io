@@ -13,7 +13,8 @@ var urlsToPrefetch = [
 '/favicon.ico',
 '/favicon-32x32.png',
 '/favicon-16x16.png',
-'/site.webmanifest'
+'/site.webmanifest',
+'/graph.html'
 ];
 var urlsToCacheInline = [
 'https://api.octopus.energy/v1/electricity-meter-points',
@@ -137,10 +138,8 @@ self.addEventListener('fetch', function(event) {
 				cache.put(event.request, responseCopy);
 				var now = new Date();
 				var todayDateString = now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2) + '-' + ('0' + now.getDate()).slice(-2) + 'T'; //2021-03-11T
-				//console.log(todayDateString);
-				//console.log(event.request.url);
 				if (event.request.url.indexOf(todayDateString) > -1) {
-				  now.setDate(now.getDate() - 1);
+				  //now.setDate(now.getDate() - 1); //uncomment to test stale cache logic
 			      addToCacheKeys(event.request.url, now);
 				}
 			  });
@@ -161,10 +160,7 @@ self.addEventListener('fetch', function(event) {
         console.log('Found response in cache:', response);
 		
 		return getFromCacheKeys(event.request.url).then(function(oldCacheTimeStamp) {
-		  //console.log(oldCacheTimeStamp);
 		  var today = new Date();
-		  console.log(today);
-		  console.log(oldCacheTimeStamp);
 		  if (oldCacheTimeStamp && ((today.getDate() !== oldCacheTimeStamp.getDate()) || (today.getMonth() !== oldCacheTimeStamp.getMonth()))) {	
 			console.log('Stale cache. About to fetch from network...');
 			event.waitUntil(deleteFromCacheKeys(event.request.url));
