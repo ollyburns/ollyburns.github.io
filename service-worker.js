@@ -126,13 +126,13 @@ self.addEventListener('fetch', function(event) {
     caches.match(event.request).then(function(response) {
 		
 	  var fetchFromNetwork = function(request) {
-        fetch(request).then(function(response) {
-		var responseCopy = response.clone();
-        console.log('Response from network is:', response);
+        return fetch(request).then(function(response) {
+		  var responseCopy = response.clone();
+          console.log('Response from network is:', response);
 		
-		//Add response to cache if in cache whitelist
-		urlsToCacheInline.forEach(function(expectedCacheName){
-		  if (event.request.url.indexOf(expectedCacheName) > -1)
+		  //Add response to cache if in cache whitelist
+		  urlsToCacheInline.forEach(function(expectedCacheName){
+		    if (event.request.url.indexOf(expectedCacheName) > -1)
 			  caches.open(CURRENT_CACHES.inline).then(function(cache) {
 				cache.put(event.request, responseCopy);
 				var now = new Date();
@@ -144,17 +144,17 @@ self.addEventListener('fetch', function(event) {
 			      addToCacheKeys(event.request.url, now);
 				}
 			  });
-		  });
+		    });
 		
-        return response;
-      }).catch(function(error) {
-        // This catch() will handle exceptions thrown from the fetch() operation.
-        // Note that a HTTP error response (e.g. 404) will NOT trigger an exception.
-        // It will return a normal response object that has the appropriate error code set.
-        console.error('Fetching failed:', error);
+          return response;
+        }).catch(function(error) {
+          // This catch() will handle exceptions thrown from the fetch() operation.
+          // Note that a HTTP error response (e.g. 404) will NOT trigger an exception.
+          // It will return a normal response object that has the appropriate error code set.
+          console.error('Fetching failed:', error);
 
-        throw error;
-      });		  
+          throw error;
+        });		  
 	  }
 
       if (response) {
