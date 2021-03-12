@@ -124,30 +124,9 @@ self.addEventListener('fetch', function(event) {
     // caches.match() will look for a cache entry in all of the caches available to the service worker.
     // It's an alternative to first opening a specific named cache and then matching on that.
     caches.match(event.request).then(function(response) {
-      if (response) {
-        console.log('Found response in cache:', response);
 		
-		getFromCacheKeys(event.request.url).then(function(oldCacheTimeStamp) {
-		  //console.log(oldCacheTimeStamp);
-		  var today = new Date();
-		  console.log(today);
-		  console.log(oldCacheTimeStamp);
-		  if (oldCacheTimeStamp && ((today.getDate() !== oldCacheTimeStamp.getDate()) || (today.getMonth() !== oldCacheTimeStamp.getMonth()))) {	
-			console.log('Stale cache. About to fetch from network...');
-			deleteFromCacheKeys(event.request.url);
-			response = undefined;
-		  }
-		});
-		
-		if (response)
-		  return response;
-      }
-	  else
-		console.log('No response found in cache. About to fetch from network...');
-
-      // event.request will always have the proper mode set ('cors, 'no-cors', etc.) so we don't
-      // have to hardcode 'no-cors' like we do when fetch()ing in the install handler.
-      return fetch(event.request).then(function(response) {
+	  var fetchFromNetwork = function(request) {
+        fetch(request).then(function(response) {
 		var responseCopy = response.clone();
         console.log('Response from network is:', response);
 		
@@ -175,7 +154,33 @@ self.addEventListener('fetch', function(event) {
         console.error('Fetching failed:', error);
 
         throw error;
-      });
+      });		  
+	  }
+
+      if (response) {
+        console.log('Found response in cache:', response);
+		
+		return getFromCacheKeys(event.request.url).then(function(oldCacheTimeStamp) {
+		  //console.log(oldCacheTimeStamp);
+		  var today = new Date();
+		  console.log(today);
+		  console.log(oldCacheTimeStamp);
+		  if (oldCacheTimeStamp && ((today.getDate() !== oldCacheTimeStamp.getDate()) || (today.getMonth() !== oldCacheTimeStamp.getMonth()))) {	
+			console.log('Stale cache. About to fetch from network...');
+			event.waitUntil(deleteFromCacheKeys(event.request.url));
+			//response = undefined;
+		  }
+		}).then(fetchFromNetwork);
+		
+		//if (response)
+		//  return response;
+      }
+	  else
+		console.log('No response found in cache. About to fetch from network...');
+
+      // event.request will always have the proper mode set ('cors, 'no-cors', etc.) so we don't
+      // have to hardcode 'no-cors' like we do when fetch()ing in the install handler.
+      return fetchFromNetwork(request);
     })
   );
 });
