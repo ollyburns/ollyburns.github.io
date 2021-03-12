@@ -168,20 +168,14 @@ self.addEventListener('fetch', function(event) {
 		  if (oldCacheTimeStamp && ((today.getDate() !== oldCacheTimeStamp.getDate()) || (today.getMonth() !== oldCacheTimeStamp.getMonth()))) {	
 			console.log('Stale cache. About to fetch from network...');
 			event.waitUntil(deleteFromCacheKeys(event.request.url));
-			//response = undefined;
-		  }
-		}).then(function () {
 			return fetchFromNetwork(event.request);
+		  }
+		  else
+			return response;
 		});
-		
-		//if (response)
-		//  return response;
       }
-	  else
-		console.log('No response found in cache. About to fetch from network...');
 
-      // event.request will always have the proper mode set ('cors, 'no-cors', etc.) so we don't
-      // have to hardcode 'no-cors' like we do when fetch()ing in the install handler.
+	  console.log('No response found in cache. About to fetch from network...');
       return fetchFromNetwork(event.request);
     })
   );
