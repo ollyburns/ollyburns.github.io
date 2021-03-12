@@ -170,7 +170,9 @@ self.addEventListener('fetch', function(event) {
 			event.waitUntil(deleteFromCacheKeys(event.request.url));
 			//response = undefined;
 		  }
-		}).then(fetchFromNetwork);
+		}).then(function () {
+			return fetchFromNetwork(event.request);
+		});
 		
 		//if (response)
 		//  return response;
@@ -180,7 +182,7 @@ self.addEventListener('fetch', function(event) {
 
       // event.request will always have the proper mode set ('cors, 'no-cors', etc.) so we don't
       // have to hardcode 'no-cors' like we do when fetch()ing in the install handler.
-      return fetchFromNetwork(request);
+      return fetchFromNetwork(event.request);
     })
   );
 });
