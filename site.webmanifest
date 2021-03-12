@@ -1,6 +1,7 @@
 {
     "name": "Usage vs Price",
     "short_name": "Usage vs Price",
+	"start_url" : "https://ollyburns.github.io/graph.html",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
