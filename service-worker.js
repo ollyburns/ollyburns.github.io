@@ -30,7 +30,7 @@ self.addEventListener('install', function(event) {
   console.log('Handling install event. Resources to prefetch:', urlsToPrefetch);
   console.log('Handling install event. Resources to cache inline:', urlsToCacheInline);
 
-  event.waitUntil(idb.openDB('UsageVsPrice', 1, {upgrade(db) {db.createObjectStore(cacheKeyStoreName);}}));
+  event.waitUntil(idb.openDB(databaseName, 1, {upgrade(db) {db.createObjectStore(cacheKeyStoreName);}}));
 
   event.waitUntil(
     caches.open(CURRENT_CACHES.prefetch).then(function(cache) {
@@ -99,7 +99,7 @@ self.addEventListener('activate', function(event) {
 });
 
 function getDBPromise() {
-  return idb.openDB('UsageVsPrice');
+  return idb.openDB(databaseName);
 }
 
 function addToCacheKeys(cacheKey, date) {	
@@ -109,7 +109,7 @@ function addToCacheKeys(cacheKey, date) {
 
 function getFromCacheKeys(cacheKey) {
   var dbPromise = getDBPromise();
-  return dbPromise.then(function(db) { db.get(cacheKeyStoreName, cacheKey) });
+  return dbPromise.then(function(db) { return db.get(cacheKeyStoreName, cacheKey) });
 }
 
 function deleteFromCacheKeys(cacheKey) {
