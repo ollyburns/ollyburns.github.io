@@ -89,6 +89,8 @@ function startUp() {
 var d = new Date();
 d.setDate(d.getDate() - 1);
 document.getElementById('date').valueAsDate = d;
+var today = new Date();
+document.getElementById('date').setAttribute("max", today.toISOString().split("T")[0]);
 
 document.getElementById('key').value = localStorage.getItem('key'); 
 document.getElementById('mpan').value = localStorage.getItem('mpan'); 
