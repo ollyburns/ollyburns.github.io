@@ -134,7 +134,8 @@ self.addEventListener('fetch', function(event) {
 		  //Add response to cache if in cache whitelist
 		  urlsToCacheInline.forEach(function(expectedCacheName){
 		    if (event.request.url.indexOf(expectedCacheName) > -1) {
-			  if (responseCopy.json() && responseCopy.json().results && responseCopy.json().results.length < 1)
+			  var data = response.clone().jason();
+			  if (data && data.results && data.results.length < 1)
 			    return;
 			  caches.open(CURRENT_CACHES.inline).then(function(cache) {
 				cache.put(event.request, responseCopy);
