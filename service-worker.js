@@ -162,7 +162,7 @@ self.addEventListener('fetch', function(event) {
 		
 		return getFromCacheKeys(event.request.url).then(function(oldCacheTimeStamp) {
 		  var today = new Date();
-		  if (oldCacheTimeStamp && ((today.getDate() !== oldCacheTimeStamp.getDate()) || (today.getMonth() !== oldCacheTimeStamp.getMonth()))) {	
+		  if (oldCacheTimeStamp && (today - oldCacheTimeStamp) > 3600000) {	
 			console.log('Stale cache. About to fetch from network...');
 			event.waitUntil(deleteFromCacheKeys(event.request.url));
 			return fetchFromNetwork(event.request);
