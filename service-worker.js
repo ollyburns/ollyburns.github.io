@@ -135,6 +135,8 @@ self.addEventListener('fetch', function(event) {
 		  urlsToCacheInline.forEach(function(expectedCacheName){
 		    if (event.request.url.indexOf(expectedCacheName) > -1) {
 			  var data = response.clone().json();
+			  console.log('debug');
+			  console.log(data);
 			  if (data && data.results && data.results.length < 1)
 			    return;
 			  caches.open(CURRENT_CACHES.inline).then(function(cache) {
