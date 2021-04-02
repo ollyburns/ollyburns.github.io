@@ -120,12 +120,29 @@ function runScript() {
 
 console.log('d3.version = ' + d3.version);
 
+var toIsoString = function(input) {
+    var tzo = -input.getTimezoneOffset(),
+        dif = tzo >= 0 ? '+' : '-',
+        pad = function(num) {
+            var norm = Math.floor(Math.abs(num));
+            return (norm < 10 ? '0' : '') + norm;
+        };
+    return input.getFullYear() +
+        '-' + pad(input.getMonth() + 1) +
+        '-' + pad(input.getDate()) +
+        'T' + pad(input.getHours()) +
+        ':' + pad(input.getMinutes()) +
+        ':' + pad(input.getSeconds()) +
+        dif + pad(tzo / 60) +
+        ':' + pad(tzo % 60);
+}
+
 var start_date = new Date(document.getElementById('date').valueAsDate);
 console.log(start_date);
 var end_date = new Date(start_date);
 end_date.setDate(end_date.getDate() + 1);
 console.log(end_date);
-var date_range = '?period_from=' + start_date.toISOString() + '&period_to=' + end_date.toISOString();
+var date_range = '?period_from=' + toIsoString(start_date) + '&period_to=' + toIsoString(end_date);
 
 
 var mpan = localStorage.getItem('mpan'); 
