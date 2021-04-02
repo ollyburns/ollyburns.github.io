@@ -161,7 +161,11 @@ var formatMinute = d3.timeFormat("%H:%M");
 
 for (i=0;i<price_data.results.length;i++) {
 	var time = formatMinute( new Date(price_data.results[i].valid_from));
-	var lookup = usage_data.results.filter(function(item){return item.interval_start.getTime() == price_data.results[i].valid_from.getTime()});
+	var lookup = usage_data.results.filter(function(item){
+	  var readingDate = new Date(item.interval_start);
+	  var priceDate = new Date(price_data.results[i].valid_from);
+	  return readingDate.getTime() == priceDate.getTime();
+	});
 	
 	//console.log(lookup);
 	
