@@ -157,7 +157,7 @@ console.log(price_data);
 console.log(usage_data);
 
 var data = [];
-var formatMinute = d3.timeFormatLocale("%H:%M");
+var formatMinute = d3.timeFormat("%H:%M");
 
 for (i=0;i<price_data.results.length;i++) {
 	var time = formatMinute(new Date(price_data.results[i].valid_from));
