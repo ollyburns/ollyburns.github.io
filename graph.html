@@ -138,6 +138,7 @@ var toIsoString = function(input) {
 }
 
 var start_date = new Date(document.getElementById('date').valueAsDate);
+start_date.setHours(0);
 console.log(start_date);
 var end_date = new Date(start_date);
 end_date.setDate(end_date.getDate() + 1);
