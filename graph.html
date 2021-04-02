@@ -157,10 +157,10 @@ console.log(price_data);
 console.log(usage_data);
 
 var data = [];
-var formatMinute = d3.timeFormat("%H:%M");
+var formatMinute = d3.timeFormatLocale("%H:%M");
 
 for (i=0;i<price_data.results.length;i++) {
-	var time = formatMinute(new Date((new Date(price_data.results[i].valid_from)).toString()));
+	var time = formatMinute(new Date(price_data.results[i].valid_from));
 	var lookup = usage_data.results.filter(function(item){
 	  var readingDate = new Date(item.interval_start);
 	  var priceDate = new Date(price_data.results[i].valid_from);
