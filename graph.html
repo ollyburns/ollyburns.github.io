@@ -125,7 +125,8 @@ console.log(start_date);
 var end_date = new Date(start_date);
 end_date.setDate(end_date.getDate() + 1);
 console.log(end_date);
-var date_range = '?period_from=' + start_date.toISOString() + '&period_to=' + end_date.toISOString();
+var strictIsoParse = d3.utcParse("%Y-%m-%dT%H:%M:%S.%LZ");
+var date_range = '?period_from=' + strictIsoParse(start_date) + '&period_to=' + strictIsoParse(end_date);
 
 
 var mpan = localStorage.getItem('mpan'); 
