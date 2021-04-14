@@ -19,11 +19,13 @@
       var API_KEY = '_J1_tqGzGewHdrQt-REVxeu9';
 
       // Array of API discovery doc URLs for APIs used by the quickstart
-      var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
+      //var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
+      var DISCOVERY_DOCS = [""];
 
       // Authorization scopes required by the API; multiple scopes can be
       // included, separated by spaces.
-      var SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
+      //var SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
+      var SCOPES = '';
 
       var authorizeButton = document.getElementById('authorize_button');
       var signoutButton = document.getElementById('signout_button');
@@ -66,7 +68,8 @@
         if (isSignedIn) {
           authorizeButton.style.display = 'none';
           signoutButton.style.display = 'block';
-          listLabels();
+          //listLabels();
+		  appendPre(JSON.stringify(gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile(), null, 2));
         } else {
           authorizeButton.style.display = 'block';
           signoutButton.style.display = 'none';
