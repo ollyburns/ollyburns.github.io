@@ -69,7 +69,7 @@
           authorizeButton.style.display = 'none';
           signoutButton.style.display = 'block';
           //listLabels();
-		  appendPre(JSON.stringify(gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile(), null, 2));
+		  appendPre(JSON.stringify(gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getEmail(), null, 2));
         } else {
           authorizeButton.style.display = 'block';
           signoutButton.style.display = 'none';
