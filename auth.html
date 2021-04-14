@@ -69,7 +69,9 @@
           authorizeButton.style.display = 'none';
           signoutButton.style.display = 'block';
           //listLabels();
-		  appendPre(JSON.stringify(gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getEmail(), null, 2));
+		  var profile = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile();
+		  console.log(profile.getName());
+		  appendPre(JSON.stringify(profile.getEmail(), null, 2));
         } else {
           authorizeButton.style.display = 'block';
           signoutButton.style.display = 'none';
