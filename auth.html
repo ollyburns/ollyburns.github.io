@@ -24,8 +24,8 @@
 
       // Authorization scopes required by the API; multiple scopes can be
       // included, separated by spaces.
-      //var SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
-      var SCOPES = '';
+      var SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
+      //var SCOPES = '';
 
       var authorizeButton = document.getElementById('authorize_button');
       var signoutButton = document.getElementById('signout_button');
@@ -44,9 +44,9 @@
       function initClient() {
         gapi.client.init({
           apiKey: API_KEY,
-          clientId: CLIENT_ID//,
+          clientId: CLIENT_ID,
+          scope: SCOPES
           //discoveryDocs: DISCOVERY_DOCS,
-          //scope: SCOPES
         }).then(function () {
           // Listen for sign-in state changes.
           gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
