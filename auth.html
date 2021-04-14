@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Gmail API Quickstart</title>
+    <title>Google API Quickstart - Triple13 POC</title>
     <meta charset="utf-8" />
   </head>
   <body>
-    <p>Gmail API Quickstart</p>
+    <p>Google API Quickstart - Triple13 POC</p>
 
     <!--Add buttons to initiate auth sequence and sign out-->
     <button id="authorize_button" style="display: none;">Authorize</button>
@@ -19,12 +19,10 @@
       var API_KEY = '_J1_tqGzGewHdrQt-REVxeu9';
 
       // Array of API discovery doc URLs for APIs used by the quickstart
-      //var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
       var DISCOVERY_DOCS = [""];
 
       // Authorization scopes required by the API; multiple scopes can be
       // included, separated by spaces.
-      //var SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
       var SCOPES = 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
 
       var authorizeButton = document.getElementById('authorize_button');
@@ -70,7 +68,7 @@
           signoutButton.style.display = 'block';
           //listLabels();
 		  var profile = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile();
-		  console.log(profile.getName());
+		  appendPre(JSON.stringify(profile.getName(), null, 2));
 		  appendPre(JSON.stringify(profile.getEmail(), null, 2));
         } else {
           authorizeButton.style.display = 'block';
@@ -103,29 +101,7 @@
         var textContent = document.createTextNode(message + '\n');
         pre.appendChild(textContent);
       }
-
-      /**
-       * Print all Labels in the authorized user's inbox. If no labels
-       * are found an appropriate message is printed.
-       */
-      function listLabels() {
-        gapi.client.gmail.users.labels.list({
-          'userId': 'me'
-        }).then(function(response) {
-          var labels = response.result.labels;
-          appendPre('Labels:');
-
-          if (labels && labels.length > 0) {
-            for (i = 0; i < labels.length; i++) {
-              var label = labels[i];
-              appendPre(label.name)
-            }
-          } else {
-            appendPre('No Labels found.');
-          }
-        });
-      }
-
+	  
     </script>
 
     <script async defer src="https://apis.google.com/js/api.js"
