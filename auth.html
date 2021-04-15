@@ -23,7 +23,7 @@
 
       // Authorization scopes required by the API; multiple scopes can be
       // included, separated by spaces.
-      var SCOPES = 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
+      var SCOPES = 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/admin.directory.rolemanagement.readonly';
 
       var authorizeButton = document.getElementById('authorize_button');
       var signoutButton = document.getElementById('signout_button');
@@ -70,6 +70,7 @@
 		  var profile = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile();
 		  appendPre(JSON.stringify(profile.getName(), null, 2));
 		  appendPre(JSON.stringify(profile.getEmail(), null, 2));
+		  console.log(profile.getId());
         } else {
           authorizeButton.style.display = 'block';
           signoutButton.style.display = 'none';
