@@ -19,84 +19,88 @@ function loadTlpbjs() {
   })(),tlpbjs.processQueue();
 }
 
-loadTlpbjs();
-tlpbjs.config = {};
-tlpbjs.config.adUnits = [{
+if(!window.tlpbjs) {
+  loadTlpbjs();
+  tlpbjs.config = {};
+  tlpbjs.config.adUnits = [{
     code: "tl_dynamic_unit",
     mediaTypes: {
-        banner: {
-            sizes: [[336, 280], [300, 250]]
-        }
+      banner: {
+        sizes: [[336, 280], [300, 250]]
+      }
     },
     bids: [{
-        bidder: "appnexus",
-        params: {
-            placementId: 25403307
-        }
+      bidder: "appnexus",
+      params: {
+        placementId: 25403307
+      }
     }]
-}];
+  }];
 
-tlpbjs.nativeRender = function() {
-  console.log("nativeRender");
-  var winners=tlpbjs.getHighestCpmBids();
-  console.log("winners: " + winners.length);
-	for (var i = 0; i < winners.length; i++) {
-    var winningBid = winners[i];
-    if (winningBid && winningBid.adId) {
-      console.log("winning bid id: "+ winningBid.adId);
-	    var div = document.getElementById("tl-ad-unit-div-1");
-      div.align = "center";
-	    if (div) {
-	      let iframe = document.createElement("iframe");
-	      iframe.frameBorder = "0";
-        iframe.scrolling = "no";
-        iframe.style = "overflow:hidden;display:block;border-style:none;";
-	      div.appendChild(iframe);
-	      var iframeDoc = iframe.contentWindow.document;
-	      tlpbjs.renderAd(iframeDoc, winningBid.adId);
-	    }
-	  }
-  }
-}
-
-tlpbjs.que.push(function() {
-  console.log("setConfig");
-  tlpbjs.setConfig({
-        s2sConfig: {
-            accountId: "tigerdroppings",
-            bidders: ["appnexus"],
-            timeout: 2000,
-            enabled: true,
-            adapter: "prebidServer",
-            endpoint: "https://a.bids.ws/openrtb2/auction",
-            syncEndpoint: "https://a.bids.ws/cookie_sync",
-            coopSync: false
-        },
-        useBidCache: true,
-        bidderTimeout: 2500,
-        enableTIDs: true,
-        bidderSequence: "random",
-        enableSendAllBids: false,
-        priceGranularity: "dense",
-        auctionOptions: {
-            suppressStaleRender: true
-        },
-        rubicon: {
-            singleRequest: true
-        },
-        userSync: {
-            filterSettings: {
-                iframe: {
-                    bidders: "*",
-                    filter: "include"
-                }
-            }
+  tlpbjs.nativeRender = function() {
+    console.log("nativeRender");
+    var winners=tlpbjs.getHighestCpmBids();
+    console.log("winners: " + winners.length);
+    for (var i = 0; i < winners.length; i++) {
+      var winningBid = winners[i];
+      if (winningBid && winningBid.adId) {
+        console.log("winning bid id: "+ winningBid.adId);
+        var div = document.getElementById("tl-ad-unit-div-1");
+        div.align = "center";
+        if (div) {
+          let iframe = document.createElement("iframe");
+          iframe.frameBorder = "0";
+          iframe.scrolling = "no";
+          iframe.style = "overflow:hidden;display:block;border-style:none;";
+          div.appendChild(iframe);
+          var iframeDoc = iframe.contentWindow.document;
+          tlpbjs.renderAd(iframeDoc, winningBid.adId);
         }
-    });
-  console.log("addAdUnits");
-  tlpbjs.addAdUnits(tlpbjs.config.adUnits);
+      }
+    }
+  }
+
+  tlpbjs.que.push(function() {
+    console.log("setConfig");
+    tlpbjs.setConfig({
+          s2sConfig: {
+              accountId: "tigerdroppings",
+              bidders: ["appnexus"],
+              timeout: 2000,
+              enabled: true,
+              adapter: "prebidServer",
+              endpoint: "https://a.bids.ws/openrtb2/auction",
+              syncEndpoint: "https://a.bids.ws/cookie_sync",
+              coopSync: false
+          },
+          useBidCache: true,
+          bidderTimeout: 2500,
+          enableTIDs: true,
+          bidderSequence: "random",
+          enableSendAllBids: false,
+          priceGranularity: "dense",
+          auctionOptions: {
+              suppressStaleRender: true
+          },
+          rubicon: {
+              singleRequest: true
+          },
+          userSync: {
+              filterSettings: {
+                  iframe: {
+                      bidders: "*",
+                      filter: "include"
+                  }
+              }
+          }
+      });
+    console.log("addAdUnits");
+    tlpbjs.addAdUnits(tlpbjs.config.adUnits);
+  });
+}
+tlpbjs.que.push(function() {
   console.log("requestBids");
   tlpbjs.requestBids({
     bidsBackHandler: tlpbjs.nativeRender()
   });
-});
+}
