@@ -39,8 +39,10 @@ tlpbjs.config.adUnits = [{
 tlpbjs.nativeRender = function() {
   console.log("nativeRender");
   var winners=tlpbjs.getHighestCpmBids();
+  console.log("winners: " + winners.length);
 	for (var i = 0; i < winners.length; i++) {
     if (winningBid && winningBid.adId) {
+      console.log("winning bid id: "+ winningBid.adId);
       var scriptTag = document.getElementsByTagName('script');
       scriptTag = scriptTag[scriptTag.length - 1];
 	    var div = scriptTag.parentNode;
