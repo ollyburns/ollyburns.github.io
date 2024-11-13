@@ -22,7 +22,6 @@ function loadTlpbjs() {
 if(!window.tlpbjs) {
   loadTlpbjs();
   tlpbjs.config = {};
-  tlpbjs.config.index = 1;
   tlpbjs.config.adUnits = [{
     code: "tl_dynamic_unit",
     mediaTypes: {
@@ -46,8 +45,7 @@ if(!window.tlpbjs) {
       var winningBid = winners[i];
       if (winningBid && winningBid.adId) {
         console.log("winning bid id: "+ winningBid.adId);
-        var div = document.currentScript ? document.currentScript.parent : document.getElementById("tl-ad-unit-div" + tlpbjs.config.index);
-        tlpbjs.config.index = tlpbjs.config.index + 1;
+        var div = document.currentScript ? document.currentScript.parent : document.getElementById("tl-ad-unit-div");
         if (div) {
           div.align = "center";
           console.log("adding iframe to: " + div.outerHTML);
