@@ -22,7 +22,7 @@ function loadTlpbjs() {
 loadTlpbjs();
 tlpbjs.config = {};
 tlpbjs.config.adUnits = [{
-    code: "/1018099/secrant_incontent_1",
+    code: "tl_dynamic_unit",
     mediaTypes: {
         banner: {
             sizes: [[336, 280], [300, 250]]
