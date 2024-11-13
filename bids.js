@@ -45,7 +45,7 @@ if(!window.tlpbjs) {
       var winningBid = winners[i];
       if (winningBid && winningBid.adId) {
         console.log("winning bid id: "+ winningBid.adId);
-        var div = document.currentScript ? document.currentScript.parent : document.getElementById("tl-ad-unit-div");
+        var div = (document.currentScript ? document.currentScript.parent : document.getElementById("tl-ad-unit-div"));
         if (div) {
           div.align = "center";
           console.log("adding iframe to: " + div.outerHTML);
