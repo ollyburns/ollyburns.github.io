@@ -103,4 +103,4 @@ tlpbjs.que.push(function() {
   tlpbjs.requestBids({
     bidsBackHandler: tlpbjs.nativeRender()
   });
-}
+});
