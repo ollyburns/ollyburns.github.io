@@ -41,6 +41,7 @@ tlpbjs.nativeRender = function() {
   var winners=tlpbjs.getHighestCpmBids();
   console.log("winners: " + winners.length);
 	for (var i = 0; i < winners.length; i++) {
+    var winningBid = winners[i];
     if (winningBid && winningBid.adId) {
       console.log("winning bid id: "+ winningBid.adId);
       var scriptTag = document.getElementsByTagName('script');
