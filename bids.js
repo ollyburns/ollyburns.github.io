@@ -44,9 +44,7 @@ tlpbjs.nativeRender = function() {
     var winningBid = winners[i];
     if (winningBid && winningBid.adId) {
       console.log("winning bid id: "+ winningBid.adId);
-      var scriptTags = document.getElementsByTagName('script');
-      var scriptTag = scriptTags[scriptTags.length - 1];
-	    var div = scriptTag.parentNode;
+	    var div = document.getElementById("tl-ad-unit-div-1");
 	    if (div) {
         console.log(div.outerHTML);
 	      let iframe = document.createElement('iframe');
