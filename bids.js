@@ -1,4 +1,4 @@
-funciton loadTlpbjs() {
+function loadTlpbjs() {
   /* prebid.js v9.18.0-pre
   Updated: 2024-11-13
   Modules: prebidServerBidAdapter */
