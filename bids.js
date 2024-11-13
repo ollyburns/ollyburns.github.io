@@ -37,7 +37,8 @@ tlpbjs.config.adUnits = [{
 }];
 
 tlpbjs.nativeRender = function() {
-  var winners=pbjs.getHighestCpmBids();
+  console.log("nativeRender");
+  var winners=tlpbjs.getHighestCpmBids();
 	for (var i = 0; i < winners.length; i++) {
     if (winningBid && winningBid.adId) {
       var scriptTag = document.getElementsByTagName('script');
@@ -55,6 +56,7 @@ tlpbjs.nativeRender = function() {
 }
 
 tlpbjs.que.push(function() {
+  console.log("setConfig");
   tlpbjs.setConfig({
         s2sConfig: {
             accountId: 'tigerdroppings',
@@ -87,7 +89,9 @@ tlpbjs.que.push(function() {
             }
         }
     });
+  console.log("addAdUnits");
   tlpbjs.addAdUnits(tlpbjs.config.adUnits);
+  console.log("requestBids");
   tlpbjs.requestBids({
     bidsBackHandler: tlpbjs.nativeRender()
   });
