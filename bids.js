@@ -40,7 +40,7 @@ tlpbjs.nativeRender = function() {
   var winners=pbjs.getHighestCpmBids();
 	for (var i = 0; i < winners.length; i++) {
     if (winningBid && winningBid.adId) {
-	    var div = document.getElementById(winningBid.adUnitCode);
+	    var div = document.getElementById("tl-ad-unit");
 	    if (div) {
 	      let iframe = document.createElement('iframe');
 	      iframe.frameBorder = '0';
