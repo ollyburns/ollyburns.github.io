@@ -22,14 +22,14 @@ function loadTlpbjs() {
 loadTlpbjs();
 tlpbjs.config = {};
 tlpbjs.config.adUnits = [{
-    code: '/1018099/secrant_incontent_1',
+    code: "/1018099/secrant_incontent_1",
     mediaTypes: {
         banner: {
             sizes: [[336, 280], [300, 250]]
         }
     },
     bids: [{
-        bidder: 'appnexus',
+        bidder: "appnexus",
         params: {
             placementId: 25403307
         }
@@ -45,11 +45,12 @@ tlpbjs.nativeRender = function() {
     if (winningBid && winningBid.adId) {
       console.log("winning bid id: "+ winningBid.adId);
 	    var div = document.getElementById("tl-ad-unit-div-1");
+      div.align = "center";
 	    if (div) {
-	      let iframe = document.createElement('iframe');
-	      iframe.frameBorder = '0';
-        iframe.scrolling = 'no';
-        iframe.style = 'overflow:hidden;display:block;border-style:none;';
+	      let iframe = document.createElement("iframe");
+	      iframe.frameBorder = "0";
+        iframe.scrolling = "no";
+        iframe.style = "overflow:hidden;display:block;border-style:none;";
 	      div.appendChild(iframe);
 	      var iframeDoc = iframe.contentWindow.document;
 	      tlpbjs.renderAd(iframeDoc, winningBid.adId);
@@ -62,21 +63,21 @@ tlpbjs.que.push(function() {
   console.log("setConfig");
   tlpbjs.setConfig({
         s2sConfig: {
-            accountId: 'tigerdroppings',
-            bidders: ['appnexus'],
+            accountId: "tigerdroppings",
+            bidders: ["appnexus"],
             timeout: 2000,
             enabled: true,
-            adapter: 'prebidServer',
-            endpoint: 'https://a.bids.ws/openrtb2/auction',
-            syncEndpoint: 'https://a.bids.ws/cookie_sync',
+            adapter: "prebidServer",
+            endpoint: "https://a.bids.ws/openrtb2/auction",
+            syncEndpoint: "https://a.bids.ws/cookie_sync",
             coopSync: false
         },
         useBidCache: true,
         bidderTimeout: 2500,
         enableTIDs: true,
-        bidderSequence: 'random',
+        bidderSequence: "random",
         enableSendAllBids: false,
-        priceGranularity: 'dense',
+        priceGranularity: "dense",
         auctionOptions: {
             suppressStaleRender: true
         },
@@ -86,8 +87,8 @@ tlpbjs.que.push(function() {
         userSync: {
             filterSettings: {
                 iframe: {
-                    bidders: '*',
-                    filter: 'include'
+                    bidders: "*",
+                    filter: "include"
                 }
             }
         }
