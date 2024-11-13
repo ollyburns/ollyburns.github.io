@@ -48,8 +48,9 @@ if(!window.tlpbjs) {
         console.log("winning bid id: "+ winningBid.adId);
         var div = document.currentScript ? document.currentScript.parent : document.getElementById("tl-ad-unit-div" + tlpbjs.config.index);
         tlpbjs.config.index = tlpbjs.config.index + 1;
-        div.align = "center";
         if (div) {
+          div.align = "center";
+          console.log("adding iframe to: " + div.outerHTML);
           let iframe = document.createElement("iframe");
           iframe.frameBorder = "0";
           iframe.scrolling = "no";
