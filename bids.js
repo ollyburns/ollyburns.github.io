@@ -44,15 +44,18 @@ tlpbjs.nativeRender = function() {
     var winningBid = winners[i];
     if (winningBid && winningBid.adId) {
       console.log("winning bid id: "+ winningBid.adId);
-      var scriptTag = document.getElementsByTagName('script');
-      scriptTag = scriptTag[scriptTag.length - 1];
+      var scriptTags = document.getElementsByTagName('script');
+      var scriptTag = scriptTags[scriptTags.length - 1];
 	    var div = scriptTag.parentNode;
 	    if (div) {
+        console.log(div.outerHTML);
 	      let iframe = document.createElement('iframe');
 	      iframe.frameBorder = '0';
 	      div.appendChild(iframe);
+        console.log(div.outerHTML);
 	      var iframeDoc = iframe.contentWindow.document;
 	      tlpbjs.renderAd(iframeDoc, winningBid.adId);
+        console.log(div.outerHTML);
 	    }
 	  }
   }
