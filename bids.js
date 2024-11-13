@@ -46,14 +46,13 @@ tlpbjs.nativeRender = function() {
       console.log("winning bid id: "+ winningBid.adId);
 	    var div = document.getElementById("tl-ad-unit-div-1");
 	    if (div) {
-        console.log(div.outerHTML);
 	      let iframe = document.createElement('iframe');
 	      iframe.frameBorder = '0';
+        iframe.scrolling = 'no';
+        iframe.style = 'overflow:hidden;display:block;border-style:none;';
 	      div.appendChild(iframe);
-        console.log(div.outerHTML);
 	      var iframeDoc = iframe.contentWindow.document;
 	      tlpbjs.renderAd(iframeDoc, winningBid.adId);
-        console.log(div.outerHTML);
 	    }
 	  }
   }
