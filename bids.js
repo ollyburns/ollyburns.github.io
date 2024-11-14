@@ -24,6 +24,18 @@ if(!window.tlpbjs) {
   tlpbjs.config = {};
   tlpbjs.config.divId = "tl-ad-unit-div";
   tlpbjs.config.adUnits = [{
+    code: "tl_dynamic_unit",
+    mediaTypes: {
+      banner: {
+        sizes: [[336, 280], [300, 250]]
+      }
+    },
+    bids: [{
+      bidder: "appnexus",
+      params: {
+        placementId: 25403307
+      }
+    }],
     ortb2Imp: {
       ext: {
         prebid: {
@@ -32,10 +44,7 @@ if(!window.tlpbjs) {
           }
         }
       }
-    },
-    bids: [{
-      bidder: "appnexus"
-    }]
+    }
   }];
 
   tlpbjs.nativeRender = function() {
