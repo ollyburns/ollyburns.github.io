@@ -32,7 +32,10 @@ if(!window.tlpbjs) {
           }
         }
       }
-    }
+    },
+    bids: [{
+      bidder: "appnexus"
+    }]
   }];
 
   tlpbjs.nativeRender = function() {
