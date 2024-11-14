@@ -19,7 +19,7 @@ function loadTlpbjs() {
   })(),tlpbjs.processQueue();
 
   tlpbjs.config = {};
-  //all these configs can be overidden by passing parameters into renderDynamicAd("div-id", "stored-imp-id")
+  //these config settings can be overidden by passing parameters into renderDynamicAd("div-id", "stored-imp-id")
   tlpbjs.config.divId = "tl-ad-unit-div";
   tlpbjs.config.storedImp = "td-in-content";
 
@@ -76,7 +76,6 @@ function renderDynamicAd(divId, storedImp) {
     loadTlpbjs();
   if(divId)
     tlpbjs.config.divId = divId;
-  let div = document.getElementById(tlpbjs.config.divId);
   if(storedImp)
     tlpbjs.config.storedImp = storedImp;
   tlpbjs.que.push(function() {
