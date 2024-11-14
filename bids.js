@@ -19,12 +19,16 @@ function loadTlpbjs() {
   })(),tlpbjs.processQueue();
 
   tlpbjs.config = {};
+  //all these configs can be overidden by passing parameters into renderDynamicAd("div-id", [300, 250], "stored-imp-id")
   tlpbjs.config.divId = "tl-ad-unit-div";
+  tlpbjs.config.width = 300;
+  tlpbjs.config.height = 250;
+  tlpbjs.config.storedImp = "td-in-content";
   tlpbjs.config.adUnits = [{
     code: "tl_dynamic_unit",
     mediaTypes: {
       banner: {
-        sizes: [[300, 250]] //need at least one size declared,eventhough stored impression also has them declared
+        sizes: [[tlpbjs.config.width,  tlpbjs.config.height]] //need at least one size declared, even though stored impression also has them declared
       }
     },
     bids: [{
@@ -34,7 +38,7 @@ function loadTlpbjs() {
       ext: {
         prebid: {
           storedrequest: {
-            id: "td-in-content"
+            id: tlpbjs.config.storedImp
           }
         }
       }
@@ -93,11 +97,17 @@ function loadTlpbjs() {
   });
 }
 
-function renderDynamicAd(divId) {
+function renderDynamicAd(divId, size, storedImp) {
   if(!window.tlpbjs)
     loadTlpbjs();
   if(divId)
     tlpbjs.config.divId = divId;
+  if(size && Array.isArray(size) && size.length > 1) {
+    tlpbjs.config.width = size[0];
+    tlpbjs.config.height = size[1];    
+  }
+  if(storedImp)
+    tlpbjs.config.storedImp = storedImp;
   tlpbjs.que.push(function() {
     console.log("requestBids");
     tlpbjs.requestBids({
