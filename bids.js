@@ -54,6 +54,7 @@ function loadTlpbjs() {
         console.log("tlpbjs: winning bid id: "+ winningBid.adId);
         var div = document.getElementById(tlpbjs.config.divId);
         if (div) {
+          div.innerHTML = "";
           div.align = "center";
           let iframe = document.createElement("iframe");
           iframe.frameBorder = "0";
