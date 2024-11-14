@@ -19,31 +19,9 @@ function loadTlpbjs() {
   })(),tlpbjs.processQueue();
 
   tlpbjs.config = {};
-  //all these configs can be overidden by passing parameters into renderDynamicAd("div-id", [300, 250], "stored-imp-id")
+  //all these configs can be overidden by passing parameters into renderDynamicAd("div-id", "stored-imp-id")
   tlpbjs.config.divId = "tl-ad-unit-div";
-  tlpbjs.config.width = 300;
-  tlpbjs.config.height = 250;
   tlpbjs.config.storedImp = "td-in-content";
-  tlpbjs.config.adUnits = [{
-    code: "tl_dynamic_unit",
-    mediaTypes: {
-      banner: {
-        sizes: [[tlpbjs.config.width,  tlpbjs.config.height]] //need at least one size declared, even though stored impression also has them declared
-      }
-    },
-    bids: [{
-       bidder: "appnexus" //need at least one bidder to trigger s2s auction
-    }],
-    ortb2Imp: {
-      ext: {
-        prebid: {
-          storedrequest: {
-            id: tlpbjs.config.storedImp
-          }
-        }
-      }
-    }
-  }];
 
   tlpbjs.nativeRender = function() {
     var winners=tlpbjs.getHighestCpmBids();
@@ -90,22 +68,41 @@ function loadTlpbjs() {
               suppressStaleRender: true
           }
       });
-    tlpbjs.addAdUnits(tlpbjs.config.adUnits);
   });
 }
 
-function renderDynamicAd(divId, size, storedImp) {
+function renderDynamicAd(divId, storedImp) {
   if(!window.tlpbjs)
     loadTlpbjs();
   if(divId)
     tlpbjs.config.divId = divId;
-  if(size && Array.isArray(size) && size.length > 1) {
-    tlpbjs.config.width = size[0];
-    tlpbjs.config.height = size[1];    
-  }
+  let div = document.getElementById(tlpbjs.config.divId);
   if(storedImp)
     tlpbjs.config.storedImp = storedImp;
   tlpbjs.que.push(function() {
+    if (!tlpbjs.config.adUnits) {
+      tlpbjs.config.adUnits = [{
+        code: "tl_dynamic_unit",
+        mediaTypes: {
+          native: {
+            type: "image"
+          }
+        },
+        bids: [{
+           bidder: "appnexus" //need at least one bidder to trigger s2s auction
+        }],
+        ortb2Imp: {
+          ext: {
+            prebid: {
+              storedrequest: {
+                id: tlpbjs.config.storedImp
+              }
+            }
+          }
+        }
+      }];
+      tlpbjs.addAdUnits(tlpbjs.config.adUnits);
+    }
     tlpbjs.requestBids({
       bidsBackHandler: tlpbjs.nativeRender()
     });
