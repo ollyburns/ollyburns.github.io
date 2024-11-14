@@ -118,7 +118,7 @@ if (document.currentScript && document.currentScript.src) {
   let tlid = src.match(/\/([^\/]*?)\.js/i)[1];
   var div;
   let scripts = document.getElementsByTagName("script");
-  script.forEach(function(s) {if (s.getAttribute('src') == src) div=s.parent});
+  scripts.forEach(function(s) {if (s.getAttribute('src') == src) div=s.parent});
   renderDynamicAd(tlid, div);
 } else if (document.currentScript && document.currentScript.dataset && document.currentScript.dataset.divid && document.currentScript.dataset.tlid) {
   renderDynamicAd(document.currentScript.dataset.tlid, document.currentScript.dataset.divid);
