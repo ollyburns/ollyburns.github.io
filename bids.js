@@ -46,17 +46,15 @@ function loadTlpbjs() {
   }];
 
   tlpbjs.nativeRender = function() {
-    console.log("nativeRender");
     var winners=tlpbjs.getHighestCpmBids();
-    console.log("winners: " + winners.length);
+    console.log("tlpbjs: winners: " + winners.length);
     for (var i = 0; i < winners.length; i++) {
       var winningBid = winners[i];
       if (winningBid && winningBid.adId) {
-        console.log("winning bid id: "+ winningBid.adId);
+        console.log("tlpbjs: winning bid id: "+ winningBid.adId);
         var div = document.getElementById(tlpbjs.config.divId);
         if (div) {
           div.align = "center";
-          console.log("adding iframe to: " + div.outerHTML);
           let iframe = document.createElement("iframe");
           iframe.frameBorder = "0";
           iframe.scrolling = "no";
@@ -70,7 +68,6 @@ function loadTlpbjs() {
   }
 
   tlpbjs.que.push(function() {
-    console.log("setConfig");
     tlpbjs.setConfig({
           s2sConfig: {
               accountId: "tl",
@@ -92,7 +89,6 @@ function loadTlpbjs() {
               suppressStaleRender: true
           }
       });
-    console.log("addAdUnits");
     tlpbjs.addAdUnits(tlpbjs.config.adUnits);
   });
 }
@@ -109,7 +105,6 @@ function renderDynamicAd(divId, size, storedImp) {
   if(storedImp)
     tlpbjs.config.storedImp = storedImp;
   tlpbjs.que.push(function() {
-    console.log("requestBids");
     tlpbjs.requestBids({
       bidsBackHandler: tlpbjs.nativeRender()
     });
