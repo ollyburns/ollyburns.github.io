@@ -32,8 +32,7 @@ if(!window.tlpbjs) {
           }
         }
       }
-    }]
-  }];
+    }];
 
   tlpbjs.nativeRender = function() {
     console.log("nativeRender");
