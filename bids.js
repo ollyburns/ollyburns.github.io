@@ -23,16 +23,17 @@ if(!window.tlpbjs) {
   loadTlpbjs();
   tlpbjs.config = {};
   tlpbjs.config.divId = "tl-ad-unit-div";
-  tlpbjs.config.adUnits = [
+  tlpbjs.config.adUnits = [{
     ortb2Imp: {
       ext: {
         prebid: {
           storedrequest: {
-            id: 'td-in-content'
+            id: "td-in-content"
           }
         }
       }
-    }];
+    }
+  }];
 
   tlpbjs.nativeRender = function() {
     console.log("nativeRender");
