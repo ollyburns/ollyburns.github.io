@@ -70,7 +70,7 @@ function loadTlpbjs() {
   });
 }
 
-function renderDynamicAd(tlid, div) {
+function renderTlDynamicAd(tlid, div) {
   if(!window.tlpbjs)
     loadTlpbjs();
   if(div) {
@@ -113,11 +113,19 @@ function renderDynamicAd(tlid, div) {
   });
 }
 
-if (document.currentScript && document.currentScript.src) {
-  let src = document.currentScript.getAttribute('src');
-  let tlid = src.match(/\/([^\/]*?)\.js/i)[1];
-  let div = document.currentScript.parentNode;
-  renderDynamicAd(tlid, div);
-} else if (document.currentScript && document.currentScript.dataset && document.currentScript.dataset.divid && document.currentScript.dataset.tlid) {
-  renderDynamicAd(document.currentScript.dataset.tlid, document.currentScript.dataset.divid);
+function initTlpbjs() {
+  var tlid, div;
+  if (document.currentScript && document.currentScript.getAttribute('src')) {
+    let src = document.currentScript.getAttribute('src');
+    tlid = src.match(/\/([^\/]*?)\.js/i)[1];
+    div = document.currentScript.parentNode;
+  }
+  if (document.currentScript && document.currentScript.dataset && document.currentScript.dataset.divid) {
+    div = document.currentScript.dataset.divid;
+  }
+  if (tlid) {
+    renderTlDynamicAd(tlid, div);
+  }
 }
+
+initTlpbjs();
