@@ -116,11 +116,7 @@ function renderDynamicAd(tlid, div) {
 if (document.currentScript && document.currentScript.src) {
   let src = document.currentScript.getAttribute('src');
   let tlid = src.match(/\/([^\/]*?)\.js/i)[1];
-  var div;
-  let scripts = document.getElementsByTagName("script");
-  for (const script of scripts) {
-    if (script.getAttribute('src') === src) div=script.parent;
-  }
+  let div = document.currentScript.parentNode;
   renderDynamicAd(tlid, div);
 } else if (document.currentScript && document.currentScript.dataset && document.currentScript.dataset.divid && document.currentScript.dataset.tlid) {
   renderDynamicAd(document.currentScript.dataset.tlid, document.currentScript.dataset.divid);
