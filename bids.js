@@ -22,19 +22,17 @@ function loadTlpbjs() {
 if(!window.tlpbjs) {
   loadTlpbjs();
   tlpbjs.config = {};
+  tlpbjs.config.divId = "tl-ad-unit-div";
   tlpbjs.config.adUnits = [{
-    code: "tl_dynamic_unit",
-    mediaTypes: {
-      banner: {
-        sizes: [[336, 280], [300, 250]]
-      }
-    },
-    bids: [{
-      bidder: "appnexus",
-      params: {
-        placementId: 25403307
-      }
-    }]
+    ortb2Imp: {
+      ext: {
+        prebid: {
+          storedrequest: {
+            id: 'td-in-content'
+          }
+        }
+      }
+    }]
   }];
 
   tlpbjs.nativeRender = function() {
@@ -45,7 +43,7 @@ if(!window.tlpbjs) {
       var winningBid = winners[i];
       if (winningBid && winningBid.adId) {
         console.log("winning bid id: "+ winningBid.adId);
-        var div = document.getElementById("tl-ad-unit-div");
+        var div = document.getElementById(tlpbjs.config.divId);
         if (div) {
           div.align = "center";
           console.log("adding iframe to: " + div.outerHTML);
@@ -65,34 +63,23 @@ if(!window.tlpbjs) {
     console.log("setConfig");
     tlpbjs.setConfig({
           s2sConfig: {
-              accountId: "tigerdroppings",
+              accountId: "tl",
               bidders: ["appnexus"],
               timeout: 2000,
               enabled: true,
               adapter: "prebidServer",
               endpoint: "https://a.bids.ws/openrtb2/auction",
               syncEndpoint: "https://a.bids.ws/cookie_sync",
-              coopSync: false
+              coopSync: false,
+              allowUnknownBidderCodes: true
           },
           useBidCache: true,
           bidderTimeout: 2500,
           enableTIDs: true,
           bidderSequence: "random",
           enableSendAllBids: false,
-          priceGranularity: "dense",
           auctionOptions: {
               suppressStaleRender: true
-          },
-          rubicon: {
-              singleRequest: true
-          },
-          userSync: {
-              filterSettings: {
-                  iframe: {
-                      bidders: "*",
-                      filter: "include"
-                  }
-              }
           }
       });
     console.log("addAdUnits");
