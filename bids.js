@@ -23,7 +23,7 @@ if(!window.tlpbjs) {
   loadTlpbjs();
   tlpbjs.config = {};
   tlpbjs.config.divId = "tl-ad-unit-div";
-  tlpbjs.config.adUnits = [{
+  tlpbjs.config.adUnits = [
     ortb2Imp: {
       ext: {
         prebid: {
