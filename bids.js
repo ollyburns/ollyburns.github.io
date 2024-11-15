@@ -124,11 +124,11 @@ function renderTlDynamicAd(tlid, div) {
       tlpbjs.addAdUnits(tlpbjs.config.adUnits);
     }
     var other_eids;
-    if (pbjs && pbjs.getUserIdsAsEids) {
+    if (!(typeof pbjs === "undefined") && pbjs.getUserIdsAsEids) {
         other_eids = pbjs.getUserIdsAsEids();
-    } else if (ihowpbjs && ihowpbjs.getUserIdsAsEids) {
+    } else if (!(typeof ihowpbjs === "undefined") && ihowpbjs.getUserIdsAsEids) {
         other_eids = ihowpbjs.getUserIdsAsEids();
-    } else if (pbjs && pbjs.adUnits && pbjs.adUnits[0] && pbjs.adUnits[0].bids && pbjs.adUnits[0].bids[0] && pbjs.adUnits[0].bids[0].userId) {
+    } else if (!(typeof pbjs === "undefined") && pbjs.adUnits && pbjs.adUnits[0] && pbjs.adUnits[0].bids && pbjs.adUnits[0].bids[0] && pbjs.adUnits[0].bids[0].userId) {
       other_eids = pbjs.adUnits[0].bids[0].userId;
     }
     tlpbjs.mergeConfig({
